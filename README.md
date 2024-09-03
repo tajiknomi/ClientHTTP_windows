@@ -62,7 +62,7 @@ cmake -A x64 ../ & cmake --build . --target clientHTTP --config Release         
 The **filetransfer** module depends on [libcurl](https://curl.se/libcurl/) and its minimal version is statically linked to filetransfer.dll. Both the x86 and x64 version of libcurl are provided in **curlFileTransfer\lib** directory. In future, dependency of **filetransfer.dll** on **libcurl.lib** may be removed, without effecting the project.
 
 ### Notes
-The app uses network resou
+Your AntiVirus might complain about the app as it is not signed by the CA provided certificate. You can put the app in AV exception list.
 
 ### Disclaimer
 This application is designed for personal and administrative use. It is not intended for unauthorized access, data manipulation, or any other malicious activity. Any use of this software for illegal purposes is strictly prohibited. You can use this service in offensive security scenarios on you own machine/network ONLY.
