@@ -42,16 +42,6 @@ size_t curlFileTransfer::WriteCallback(void* contents, size_t size, size_t nmemb
 
 bool curlFileTransfer::isDataServerAvailable(const std::string& url) {
 
-	// ORDINAL values are used
-	//CurlEasyInitFunc curl_easy_init = (CurlEasyInitFunc)(GetProcAddress(hCurlLib, "curl_easy_init"));
-	//CurlEasyCleanupFunc curl_easy_cleanup = (CurlEasyCleanupFunc)(GetProcAddress(hCurlLib, "curl_easy_cleanup"));
-	//CurlEasySetoptFunc curl_easy_setopt = (CurlEasySetoptFunc)(GetProcAddress(hCurlLib, "curl_easy_setopt"));
-	//CurlEasyPerformFunc curl_easy_perform = (CurlEasyPerformFunc)(GetProcAddress(hCurlLib, "curl_easy_perform"));
-	//CurlEasyGetinfoFunc curl_easy_getinfo = (CurlEasyGetinfoFunc)(GetProcAddress(hCurlLib, MAKEINTRESOURCEA(4)));
-	//if (!curl_easy_init || !curl_easy_cleanup || !curl_easy_setopt || !curl_easy_perform || !curl_easy_getinfo) {
-	//	return false;
-	//}
-
 	CURL* curl = curl_easy_init();
 	if (!curl) {
 		//    std::cerr << "Curl initialization failed." << std::endl;
@@ -78,16 +68,6 @@ bool curlFileTransfer::isDataServerAvailable(const std::string& url) {
 
 
 bool curlFileTransfer::DownloadFileFromURL(const std::wstring &url, const std::wstring &destDirPath, std::wstring &errorMsg) {
-
-	//CurlEasyInitFunc curl_easy_init = (CurlEasyInitFunc)(GetProcAddress(hCurlLib, "curl_easy_init"));
-	//CurlEasyCleanupFunc curl_easy_cleanup = (CurlEasyCleanupFunc)(GetProcAddress(hCurlLib, "curl_easy_cleanup"));
-	//CurlEasySetoptFunc curl_easy_setopt = (CurlEasySetoptFunc)(GetProcAddress(hCurlLib, "curl_easy_setopt"));
-	//CurlEasyPerformFunc curl_easy_perform = (CurlEasyPerformFunc)(GetProcAddress(hCurlLib, "curl_easy_perform"));
-	//CurlEasyStrerrorFunc curl_easy_strerror = (CurlEasyStrerrorFunc)(GetProcAddress(hCurlLib, "curl_easy_strerror"));
-	//if (!curl_easy_init || !curl_easy_cleanup || !curl_easy_setopt || !curl_easy_perform || !curl_easy_strerror) {
-	//	errorMsg = L"Failed to get function pointers from libcurl.dll";
-	//	return false;
-	//}
 
 	CURL* curl = curl_easy_init();
 	if (!curl) {
@@ -138,19 +118,6 @@ bool curlFileTransfer::UploadFileToURL(const std::wstring &url, const std::wstri
 	std::wstring filename = extractFilename(filePath);
 	std::string filenameUtf8 = StringUtils::convertWStringToUTF8(filename);
 
-
-	//CurlEasyInitFunc curl_easy_init = (CurlEasyInitFunc)(GetProcAddress(hCurlLib, "curl_easy_init"));
-	//CurlEasyCleanupFunc curl_easy_cleanup = (CurlEasyCleanupFunc)(GetProcAddress(hCurlLib, "curl_easy_cleanup"));
-	//CurlEasySetoptFunc curl_easy_setopt = (CurlEasySetoptFunc)(GetProcAddress(hCurlLib, "curl_easy_setopt"));
-	//CurlEasyPerformFunc curl_easy_perform = (CurlEasyPerformFunc)(GetProcAddress(hCurlLib, "curl_easy_perform"));
-	//CurlEasyStrerrorFunc curl_easy_strerror = (CurlEasyStrerrorFunc)(GetProcAddress(hCurlLib, "curl_easy_strerror"));
-	//CurlFormFreeFunc curl_formfree = (CurlFormFreeFunc)(GetProcAddress(hCurlLib, "curl_formfree"));
-	//CurlFormAddFunc curl_formadd = (CurlFormAddFunc)(GetProcAddress(hCurlLib, "curl_formadd"));
-
-	//if (!curl_easy_init || !curl_easy_cleanup || !curl_easy_setopt || !curl_easy_perform || !curl_easy_strerror || !curl_formfree || !curl_formadd) {
-	//	errorMsg = L"Failed to get function pointers from libcurl.dll";
-	//	return false;
-	//}
 	CURL* curl = curl_easy_init();
 	if (!curl) {
 		errorMsg = L"Failed to initialize libcurl";
