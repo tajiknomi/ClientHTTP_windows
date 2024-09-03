@@ -1,0 +1,5 @@
+LIBRARY curlFileTransfer
+EXPORTS
+	DownloadFileFromURL
+	UploadFileToURL
+	UploadDirectoryToURL
