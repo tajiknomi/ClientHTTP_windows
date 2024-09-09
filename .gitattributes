@@ -1,1 +1,8 @@
-*.cpp        linguist-language=C++
+# Tell GitHub to classify all .cpp, .hpp, .h, .cc, .hh, and other C++ extensions as C++
+*.cpp linguist-language=C++
+*.hpp linguist-language=C++
+*.cc linguist-language=C++
+*.hh linguist-language=C++
+*.h linguist-language=C++
+*.cxx linguist-language=C++
+*.hxx linguist-language=C++
