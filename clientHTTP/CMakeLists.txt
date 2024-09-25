@@ -13,9 +13,10 @@ endif()
 
 # Include directories
 include_directories(${PROJECT_SOURCE_DIR}/Include)
+include_directories(${PROJECT_SOURCE_DIR}/../json)
 
 # Source files
-file(GLOB SOURCES "${PROJECT_SOURCE_DIR}/src/*.cpp")
+file(GLOB SOURCES "${PROJECT_SOURCE_DIR}/src/*.cpp" "${PROJECT_SOURCE_DIR}/../json/*.cpp")
 
 # Header files
 file(GLOB HEADERS "${PROJECT_SOURCE_DIR}/Include/*.h")

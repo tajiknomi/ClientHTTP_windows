@@ -13,12 +13,16 @@ endif()
 
 # Include directories
 include_directories(${PROJECT_SOURCE_DIR}/Include)
+include_directories(${PROJECT_SOURCE_DIR}/../json)
 
 # Source files
-file(GLOB SOURCES "${PROJECT_SOURCE_DIR}/src/*.cpp")
+file(GLOB SOURCES "${PROJECT_SOURCE_DIR}/src/*.cpp" "${PROJECT_SOURCE_DIR}/../json/*.cpp")
+#file(GLOB SOURCES "${PROJECT_SOURCE_DIR}/../json/*.cpp")
 
 # Header files
 file(GLOB HEADERS "${PROJECT_SOURCE_DIR}/Include/*.h")
+#file(GLOB_RECURSE HEADERS_JSON "${PROJECT_SOURCE_DIR}/../json/*.h")
+#list(APPEND HEADERS ${HEADERS_JSON})
 
 # Create the DLL target
 add_library(${PROJECT_NAME} SHARED ${SOURCES} ${HEADERS} "export/export.def")

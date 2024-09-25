@@ -20,51 +20,9 @@
 
 #include "filemanager.h"
 #include <codecvt>
-
+#include "json.h"
 
 /* ================================ PRIVATE FUNCTIONS ================================*/
-
-// Helper function to escape special characters in JSON
-std::string escape_json(const std::wstring& wstr) {
-	std::string str(wstr.begin(), wstr.end());
-	std::string result;
-	for (char ch : str) {
-		switch (ch) {
-		case '\"': result += "\\\""; break;
-		case '\\': result += "\\\\"; break;
-		case '\b': result += "\\b";  break;
-		case '\f': result += "\\f";  break;
-		case '\n': result += "\\n";  break;
-		case '\r': result += "\\r";  break;
-		case '\t': result += "\\t";  break;
-		default:   result += ch;     break;
-		}
-	}
-	return result;
-}
-
-// Converts std::vector<std::wstring> to JSON format
-std::wstring to_json(const std::vector<std::wstring>& data) {
-	if (data.size() % 2 != 0) {
-		return L"{}"; // Return empty JSON object if the vector size is not even
-	}
-
-	std::string json = "{";
-	for (size_t i = 0; i < data.size(); i += 2) {
-		std::wstring key = data[i];
-		std::wstring value = data[i + 1];
-
-		json += "\"" + escape_json(key) + "\":\"" + escape_json(value) + "\"";
-
-		if (i + 2 < data.size()) { // If not the last pair, add a comma
-			json += ",";
-		}
-	}
-	json += "}";
-
-	// Convert UTF-8 encoded JSON string to std::wstring
-	return std::wstring(json.begin(), json.end());
-}
 
 // std::string to std::wstring
 std::wstring s2ws(const std::string& str) {
@@ -119,7 +77,7 @@ std::wstring filemanager(const std::wstring &dirToList) {
 		}
 		fileList_json.push_back(L"size");
 		fileList_json.push_back(s2ws(sizeInBytes));
-		dirInfo.append(to_json(fileList_json));
+		dirInfo.append(JsonUtil::to_json(fileList_json));
 		dirInfo.append(L",");
 		fileList_json.clear();
 	}

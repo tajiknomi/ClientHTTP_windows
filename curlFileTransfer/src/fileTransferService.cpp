@@ -66,7 +66,6 @@ bool curlFileTransfer::isDataServerAvailable(const std::string& url) {
 	return false;  // Port is either closed or didn't respond as expected.
 }
 
-
 bool curlFileTransfer::DownloadFileFromURL(const std::wstring &url, const std::wstring &destDirPath, std::wstring &errorMsg) {
 
 	CURL* curl = curl_easy_init();
@@ -115,8 +114,6 @@ bool curlFileTransfer::UploadFileToURL(const std::wstring &url, const std::wstri
 
 	curl_off_t fileSize = fileStream.tellg(); if (fileSize == 0) { return false; } // Don't proceed if size is ZERO
 	fileStream.seekg(0, std::ios::beg);
-	std::wstring filename = extractFilename(filePath);
-	std::string filenameUtf8 = StringUtils::convertWStringToUTF8(filename);
 
 	CURL* curl = curl_easy_init();
 	if (!curl) {
@@ -128,7 +125,7 @@ bool curlFileTransfer::UploadFileToURL(const std::wstring &url, const std::wstri
 
 	CURLFORMcode formAddResult = curl_formadd(&formPost, &lastPtr,
 		CURLFORM_COPYNAME, "file",
-		CURLFORM_FILE, StringUtils::ws2s(filePath).c_str(),
+		CURLFORM_FILE, StringUtils::convertWStringToUTF8(filePath).c_str(),
 		CURLFORM_END);
 
 	if (formAddResult != CURL_FORMADD_OK) {
