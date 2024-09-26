@@ -21,7 +21,6 @@
 #include "fileTransferService.h"
 #include <fstream>
 
-
 std::wstring curlFileTransfer::extractFilename(const std::wstring& filePath) {
 	const size_t lastSlash = filePath.find_last_of(L"/\\"); // Find the last slash or backslash
 	if (lastSlash != std::wstring::npos) {
@@ -38,6 +37,12 @@ size_t curlFileTransfer::WriteData(void* buffer, size_t size, size_t nmemb, void
 
 size_t curlFileTransfer::WriteCallback(void* contents, size_t size, size_t nmemb, void* userp) {
 	return size * nmemb;
+}
+
+size_t curlFileTransfer::readCallback(char* buffer, size_t size, size_t nitems, void* stream) {
+	std::ifstream* fileStream = static_cast<std::ifstream*>(stream);
+	fileStream->read(buffer, size * nitems);
+	return fileStream->gcount();  // Return the actual number of bytes read
 }
 
 bool curlFileTransfer::isDataServerAvailable(const std::string& url) {
@@ -101,57 +106,49 @@ bool curlFileTransfer::DownloadFileFromURL(const std::wstring &url, const std::w
 
 bool curlFileTransfer::UploadFileToURL(const std::wstring &url, const std::wstring &filePath, std::wstring &errorMsg) {
 
-	// Open the file for reading
 	std::ifstream fileStream(filePath, std::ios::binary);
 	if (!fileStream.is_open()) {
-		// Handle file opening failure
 		errorMsg = filePath + L": file opening failure";
 		return false;
 	}
-	// Get the file size
 	fileStream.seekg(0, std::ios::end);
-	if (static_cast<int>(fileStream.tellg()) == -1) { return false; } // Stream does not support the operation, or if it fails, the function returns -1
-
-	curl_off_t fileSize = fileStream.tellg(); if (fileSize == 0) { return false; } // Don't proceed if size is ZERO
+	curl_off_t fileSize = fileStream.tellg();
+	if (fileSize == -1) {
+		errorMsg = L"Failed to get the file size.";
+		return false;
+	}
 	fileStream.seekg(0, std::ios::beg);
-
 	CURL* curl = curl_easy_init();
 	if (!curl) {
 		errorMsg = L"Failed to initialize libcurl";
 		return false;
 	}
-	struct curl_httppost *formPost = nullptr;
-	struct curl_httppost *lastPtr = nullptr;
+	curl_mime* mime = curl_mime_init(curl);
+	curl_mimepart* part = curl_mime_addpart(mime);
+	curl_mime_data_cb(part, fileSize, readCallback, nullptr, nullptr, &fileStream);
 
-	CURLFORMcode formAddResult = curl_formadd(&formPost, &lastPtr,
-		CURLFORM_COPYNAME, "file",
-		CURLFORM_FILE, StringUtils::convertWStringToUTF8(filePath).c_str(),
-		CURLFORM_END);
+	const std::string filePath_utf8 = StringUtils::convertWStringToUTF8(filePath);
+	curl_mime_name(part, "file");
+	curl_mime_filename(part, filePath_utf8.c_str());
 
-	if (formAddResult != CURL_FORMADD_OK) {
-		errorMsg = L"Failed to add form data: " + std::to_wstring(formAddResult);
-		curl_easy_cleanup(curl);
-		return false;
-	}
+	curl_easy_setopt(curl, CURLOPT_URL, StringUtils::convertWStringToUTF8(url).c_str());
+	curl_easy_setopt(curl, CURLOPT_MIMEPOST, mime);
 
-	// Set options for the POST request
-	curl_easy_setopt(curl, CURLOPT_URL, StringUtils::ws2s(url).c_str());
-	curl_easy_setopt(curl, CURLOPT_HTTPPOST, formPost);
+	// Set the callback function for writing response data
 	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+	// Set a user agent
 	curl_easy_setopt(curl, CURLOPT_USERAGENT, "clienthttp (Windows NT; x86)");
 
-	// Enable verbose mode to get detailed debug output
-	// curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);		// DELETE THIS
+	// Enable verbose mode for debugging (optional)
+	// curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
 
 	int retValue = curl_easy_perform(curl);
 	if (retValue != CURLE_OK) {
-		if (retValue == CURLE_COULDNT_CONNECT) {
-			errorMsg = L"Couldn't connect to Data Server i.e.  " + url;
-		}
-		errorMsg = L"Failed to upload file. curlErrorCode " + std::to_wstring(retValue);
+		errorMsg = L"Failed to upload file. curlErrorCode: " + std::to_wstring(retValue);
 	}
+	curl_mime_free(mime);
 	curl_easy_cleanup(curl);
-	curl_formfree(formPost);
+
 	return (retValue == CURLE_OK);
 }
 

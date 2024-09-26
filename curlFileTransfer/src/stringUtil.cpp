@@ -49,7 +49,8 @@ std::wstring StringUtils::s2ws(const std::string& str) {
 }
 
 std::string StringUtils::convertWStringToUTF8(const std::wstring& wstr) {
-	std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> utf8_converter;
+	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> utf8_converter;
+//	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> utf8_converter;
 	return utf8_converter.to_bytes(wstr);
 }
 

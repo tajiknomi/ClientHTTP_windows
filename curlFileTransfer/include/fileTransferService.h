@@ -30,21 +30,11 @@ namespace fs = std::filesystem;
 
 class curlFileTransfer {
 
-private:		/* Type defines for CURL Functions */
-	//typedef void CURL;
-	//typedef CURL* (*CurlEasyInitFunc)();
-	//typedef void(*CurlEasyCleanupFunc)(CURL*);
-	//typedef int(*CurlEasySetoptFunc)(CURL*, int, ...);
-	//typedef int(*CurlEasyPerformFunc)(CURL*);
-	//typedef const char* (*CurlEasyStrerrorFunc)(int);
-	//typedef void(*CurlFormFreeFunc)(void*);
-	//typedef CURLFORMcode(*CurlFormAddFunc)(struct curl_httppost**, struct curl_httppost**, ...);
-	//typedef CURLcode(*CurlEasyGetinfoFunc)(CURL*, CURLINFO, ...);
-
 private:
 	static std::wstring extractFilename(const std::wstring& filePath);
 	static size_t WriteData(void* buffer, size_t size, size_t nmemb, void* userp);
 	static size_t WriteCallback(void* contents, size_t size, size_t nmemb, void* userp);
+	static size_t readCallback(char* buffer, size_t size, size_t nitems, void* stream);
 	static bool isDataServerAvailable(const std::string& url);
 
 public:		/* Public API */
