@@ -27,7 +27,7 @@ Administer your windows machine(s) remotely via any REST/json server e.g. [Remot
 ### Usage
 Download the latest package from the release section and install it. Go to the installation directory and use the below command to start the service.
 ```
-clienthttp.exe <URL/IP> <port>
+$ clienthttp.exe <URL/IP> <port>
 ```
 place the url/ip and port of the Command and Control server.
 
@@ -53,9 +53,9 @@ To enhance flexibility and maintainability, the project is designed with a modul
 The app is intentionally written on windows-7 to provide backward compatibility for older machines as well. CMake is used for generating and building the project.
 
 ```
-mkdir build & cd build
-cmake -A win32 ../ & cmake --build . --target clientHTTP --config Release         // for x86
-cmake -A x64 ../ & cmake --build . --target clientHTTP --config Release           // for x64
+$ mkdir build & cd build
+$ cmake -A win32 ../ & cmake --build . --target clientHTTP --config Release         // for x86
+$ cmake -A x64 ../ & cmake --build . --target clientHTTP --config Release           // for x64
 ```
 
 ### Dependencies
