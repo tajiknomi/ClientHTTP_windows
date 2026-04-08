@@ -27,11 +27,11 @@ Administer your windows machine(s) remotely via any REST/json server e.g. [Remot
 ### Usage
 Download the latest package from the release section and install it. Go to the installation directory and use the below command to start the service.
 ```
-clienthttp.exe <URL/IP> <port>
+$ clienthttp.exe <URL/IP> <port>
 ```
 place the url/ip and port of the Command and Control server.
 
-On server side; you can use [this server app as a command & control unit](https://github.com/tajiknomi/Remote_Administrative_Console/releases/tag/v1.0.1) OR you can use your own REST/json http server.
+On server side; you can use [this server app as a command & control unit](https://github.com/tajiknomi/Remote_Administrative_Console/releases) OR you can use your own REST/json http server.
 
 
 By default, the app will send hearbeat/alive signal every 500 milliseconds in order to inform the server at *<URL/IP>* that it is alive and will collect the command/instruction from server (*if the server have any instruction/command/data for the client*). You can modify this interval time in operations.cpp (variable ---> *receiveResponse_timeout*).
@@ -53,9 +53,9 @@ To enhance flexibility and maintainability, the project is designed with a modul
 The app is intentionally written on windows-7 to provide backward compatibility for older machines as well. CMake is used for generating and building the project.
 
 ```
-mkdir build & cd build
-cmake -A win32 ../ & cmake --build . --target clientHTTP --config Release         // for x86
-cmake -A x64 ../ & cmake --build . --target clientHTTP --config Release           // for x64
+$ mkdir build & cd build
+$ cmake -A win32 ../ & cmake --build . --target clientHTTP --config Release         // for x86
+$ cmake -A x64 ../ & cmake --build . --target clientHTTP --config Release           // for x64
 ```
 
 ### Dependencies
