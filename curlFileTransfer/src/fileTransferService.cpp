@@ -106,7 +106,11 @@ bool curlFileTransfer::DownloadFileFromURL(const std::wstring &url, const std::w
 
 bool curlFileTransfer::UploadFileToURL(const std::wstring &url, const std::wstring &filePath, std::wstring &errorMsg) {
 
-	std::ifstream fileStream(filePath, std::ios::binary);
+	if (!std::filesystem::exists(filePath)) {
+		errorMsg = filePath + L": File does NOT exist\n";
+		return false;
+	}
+	std::ifstream fileStream(std::filesystem::path(filePath), std::ios::binary);
 	if (!fileStream.is_open()) {
 		errorMsg = filePath + L": file opening failure";
 		return false;
